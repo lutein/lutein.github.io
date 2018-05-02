@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Never Settle">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/lutein/lutein.github.io/master/img/jewelry.png">
+    <link rel="alternate" type="application/atom+xml" title="Lutein" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Introduction to VAE(Variational Auto-Encoder) Part1｜Stone and Jewelry
+        
+    </title>
+
+    <link rel="canonical" href="http://lutein.github.io/2018/04/30/VAE-version1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('undefined')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Lutein
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Archive/">Archive</a>
+                        </li>
+							
+						
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/2018/04/30/VAE-version1/VAE.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/2018/04/30/VAE-version1/VAE.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Introduction to VAE(Variational Auto-Encoder) Part1</h1>
+                    
+                    <h2 class="subheading">变分自编码器简介（一）</h2>
+                    
+                    <span class="meta">
+                         作者 Lutein
+                        <span>
+                          日期 2018-04-30
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Deep Learning"
+                           title="Deep Learning">Deep Learning</a>
+                        
+                        <a class="tag" href="/tags/#Unsupervised Learning"
+                           title="Unsupervised Learning">Unsupervised Learning</a>
+                        
+                        <a class="tag" href="/tags/#Theory"
+                           title="Theory">Theory</a>
+                        
+                        <a class="tag" href="/tags/#VAE"
+                           title="VAE">VAE</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Introduction to VAE(Variational Auto-Encoder) Part1
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="VAE的简要介绍"><a href="#VAE的简要介绍" class="headerlink" title="VAE的简要介绍"></a>VAE的简要介绍</h1><p><a href="https://lutein.github.io/2018/04/30/VAE-version1/">Part1</a>从算法角度入手，以mnist数据集为例介绍VAE的输入输出，损失函数和基本理论，以及VAE的常见应用，附带Pytorch实现的VAE代码；<a href="https://lutein.github.io/2018/05/02/VAE-part2/">Part2</a>着重于概率论的理论分析，涉及到流形学习，稍微提到了与VAE相似的CAE。</p>
+<h2 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h2><p>以mnist数据集为例，输入为m维，输出为n维的网络，称为decoder或者generative model，decoder结构可为MLP, CNN, RNN等<br><img src="/2018/04/30/VAE-version1/./1525073674012.png" alt="Alt text"></p>
+<p>以mnist为例，6万张0~9手写灰度数字，大小28x28，将每个像素归一化到[0,1]，训练集$X\subset[0,1]^{784}$，将输出也限定在此范围类，对decoder最后一层加入<code>sigmoid</code>激活。</p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><p>为了训练解码器，引入encoder(recognition model)，输入为n维，输出为2*m维，也可以为任意合适的结构。<br><img src="/2018/04/30/VAE-version1/./1525073731162.png" alt="Alt text"></p>
+<p>将encoder输出分别视为m个高斯分布的均值和方差的对数。然后根据输出的均值和方差生成服从相应高斯分布的随机数，作为decoder的输入，产生n维输出结果$\hat{x}$.</p>
+<p>训练过程可以表示为：<br><img src="/2018/04/30/VAE-version1/./1525075088019.png" alt="Alt text"></p>
+<h3 id="采样"><a href="#采样" class="headerlink" title="采样"></a>采样</h3><p>reparameterize方法<br>由于$z\sim N(\mu,\sigma)$，应该从$N(\mu,\sigma)$采样，但这个采样操作对$\mu,\sigma$不可导，因此不能使用常规梯度下降进行反向传播。通过reparameterization，首先从$N(0,1)$分布中采样得到$\epsilon$，然后$z=\sigma\cdot\epsilon+\mu,z\sim N(\mu,\sigma)$.<br>这个从encoder的输出到decoder输入的过程只涉及线性操作，可以使用GD优化。<br><img src="/2018/04/30/VAE-version1/./1525075964064.png" alt="Alt text"></p>
+<blockquote>
+<p>reparameterization的代价是隐变量连续。</p>
+</blockquote>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>将encoder与decoder结合，对于训练集中的每个样本$x$都能输出相同维度的$<br>\hat{x}$结果，优化目标是使$x,\hat{x}$尽可能接近。使$x$经过编码后能够通过解码尽可能多的恢复出原有信息。</p>
+<p>对于$x\in[0,1]$，使用交叉熵来衡量二者间的差异:</p>
+<script type="math/tex; mode=display">CE=\sum_{i=1}^{n}-[x_i\cdot\log(\hat{x}_i)+(1-x_i)\cdot\log(1-\hat{x}_i)]</script><p>也可以用MSE损失函数：</p>
+<script type="math/tex; mode=display">MSE=\sum_{i=1}^{n}(x_i-\hat{x}_i)^2</script><blockquote>
+<p><strong>训练过程中，输入就是输出，这是VAE中autoencoder自编码的含义</strong></p>
+</blockquote>
+<p>此外，需要对encoder输出的$\mu,\log\sigma^2$用KL散度加以约束：(为什么使用这一项为约束将在<a href="https://lutein.github.io/2018/05/02/VAE-part2/">第二部分</a>最后一节中进行分析)</p>
+<script type="math/tex; mode=display">KL=-0.5*(1+\log\sigma^2-\mu^2-\sigma^2)\\=-0.5(1+\log\sigma^2-\mu^2-e^{\log\sigma^2})</script><p>所以最终的损失函数为：</p>
+<script type="math/tex; mode=display">L=CE+KL</script><p>或者：</p>
+<script type="math/tex; mode=display">L=MSE+KL</script><p>训练过程中只使用了$x$的数据，既是输入也是gt，与其标签无关，因此是无监督学习。</p>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><p><a href="https://github.com/wohlert/semi-supervised-pytorch" target="_blank" rel="noopener">VAE Pytorch Implementation</a><br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Encoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dims, sample_layer=GaussianSample)</span>:</span></span><br><span class="line">        super(Encoder, self).__init__()</span><br><span class="line">        [x_dim, h_dim, z_dim] = dims</span><br><span class="line">        neurons = [x_dim, *h_dim]</span><br><span class="line">        linear_layers = [nn.Linear(neurons[i<span class="number">-1</span>], neurons[i]) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(neurons))]</span><br><span class="line">        self.hidden = nn.ModuleList(linear_layers)</span><br><span class="line">        self.sample = sample_layer(h_dim[<span class="number">-1</span>], z_dim)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.hidden:</span><br><span class="line">            x = F.relu(layer(x))</span><br><span class="line">        <span class="keyword">return</span> self.sample(x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Decoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dims)</span>:</span></span><br><span class="line">        super(Decoder, self).__init__()</span><br><span class="line">        [z_dim, h_dim, x_dim] = dims</span><br><span class="line">        neurons = [z_dim, *h_dim]</span><br><span class="line">        linear_layers = [nn.Linear(neurons[i<span class="number">-1</span>], neurons[i]) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(neurons))]</span><br><span class="line">        self.hidden = nn.ModuleList(linear_layers)</span><br><span class="line">        self.reconstruction = nn.Linear(h_dim[<span class="number">-1</span>], x_dim)</span><br><span class="line">        self.output_activation = nn.Sigmoid()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.hidden:</span><br><span class="line">            x = F.relu(layer(x))</span><br><span class="line">        <span class="keyword">return</span> self.output_activation(self.reconstruction(x))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VariationalAutoencoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dims)</span>:</span></span><br><span class="line">        super(VariationalAutoencoder, self).__init__()</span><br><span class="line">        [x_dim, z_dim, h_dim] = dims</span><br><span class="line">        self.z_dim = z_dim</span><br><span class="line">        self.flow = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">        self.encoder = Encoder([x_dim, h_dim, z_dim])</span><br><span class="line">        self.decoder = Decoder([z_dim, list(reversed(h_dim)), x_dim])</span><br><span class="line">        self.kl_divergence = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> self.modules():</span><br><span class="line">            <span class="keyword">if</span> isinstance(m, nn.Linear):</span><br><span class="line">                init.xavier_normal(m.weight.data)</span><br><span class="line">                <span class="keyword">if</span> m.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">                    m.bias.data.zero_()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_kld</span><span class="params">(self, z, q_param, p_param=None)</span>:</span></span><br><span class="line">        (mu, log_var) = q_param</span><br><span class="line">        <span class="keyword">if</span> self.flow <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            f_z, log_det_z = self.flow(z)</span><br><span class="line">            qz = log_gaussian(z, mu, log_var) - sum(log_det_z)</span><br><span class="line">            z = f_z</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            qz = log_gaussian(z, mu, log_var)</span><br><span class="line">        <span class="keyword">if</span> p_param <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            pz = log_standard_gaussian(z)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            (mu, log_var) = p_param</span><br><span class="line">            pz = log_gaussian(z, mu, log_var)</span><br><span class="line">        kl = qz - pz</span><br><span class="line">        <span class="keyword">return</span> kl</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_flow</span><span class="params">(self, flow)</span>:</span></span><br><span class="line">        self.flow = flow</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, y=None)</span>:</span></span><br><span class="line">        z, z_mu, z_log_var = self.encoder(x)</span><br><span class="line">        self.kl_divergence = self._kld(z, (z_mu, z_log_var))</span><br><span class="line">        x_mu = self.decoder(z)</span><br><span class="line">        <span class="keyword">return</span> x_mu</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sample</span><span class="params">(self, z)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.decoder(z)</span><br></pre></td></tr></table></figure></p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h3 id="数据生成"><a href="#数据生成" class="headerlink" title="数据生成"></a>数据生成</h3><p>指定$p(z)$为标准正态分布，将已经训练好的decoder与标准正态分布结合起来进行采样，生成与训练集相似的新样本。<br><img src="/2018/04/30/VAE-version1/./1525091145424.png" alt="Alt text"></p>
+<p>分别由CE和MSE损失训练的decoder进行采样生成的结果可视化：<br><img src="/2018/04/30/VAE-version1/./1525091510179.png" alt=""></p>
+<h3 id="高维数据可视化"><a href="#高维数据可视化" class="headerlink" title="高维数据可视化"></a>高维数据可视化</h3><p>encoder将数据$x$映射到低维$z$空间。<br>CE与MSE损失的可视化结果：<br><img src="/2018/04/30/VAE-version1/./1525091826213.png" alt="Alt text"></p>
+<h3 id="缺失数据填补-imputation"><a href="#缺失数据填补-imputation" class="headerlink" title="缺失数据填补(imputation)"></a>缺失数据填补(imputation)</h3><p>很多实际问题中样本各维数据间存在相关性，在部分维度缺失或不准确时可以通过这一特性进行填补。</p>
+<p><img src="/2018/04/30/VAE-version1/./1525091985447.png" alt="Alt text"></p>
+<h3 id="semi-supervised-learning"><a href="#semi-supervised-learning" class="headerlink" title="semi-supervised learning"></a>semi-supervised learning</h3><p>半监督学习利用小部分带标注数据和大量无标注数据来学习预测模型，VAE学习到的特征可以用来作无监督。</p>
+<p><strong>指路<a href="https://lutein.github.io/2018/05/02/VAE-part2/">Part2</a></strong></p>
+<p><strong>reference:</strong><br><a href="https://blog.csdn.net/jackytintin/article/details/53641885" target="_blank" rel="noopener">https://blog.csdn.net/jackytintin/article/details/53641885</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/05/01/intern-interview/" data-toggle="tooltip" data-placement="top"
+                           title="一个记录">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/04/20/numpy-tips/" data-toggle="tooltip" data-placement="top"
+                           title="Tips for Numpy">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTk0NC8xMjQ4MA">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VAE的简要介绍"><span class="toc-text">VAE的简要介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入输出"><span class="toc-text">输入输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#训练"><span class="toc-text">训练</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#采样"><span class="toc-text">采样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#损失函数"><span class="toc-text">损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#code"><span class="toc-text">code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用"><span class="toc-text">应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据生成"><span class="toc-text">数据生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#高维数据可视化"><span class="toc-text">高维数据可视化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺失数据填补-imputation"><span class="toc-text">缺失数据填补(imputation)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#semi-supervised-learning"><span class="toc-text">semi-supervised learning</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Deep Learning"
+                           title="Deep Learning">Deep Learning</a>
+                        
+                        <a class="tag" href="/tags/#Unsupervised Learning"
+                           title="Unsupervised Learning">Unsupervised Learning</a>
+                        
+                        <a class="tag" href="/tags/#Theory"
+                           title="Theory">Theory</a>
+                        
+                        <a class="tag" href="/tags/#VAE"
+                           title="VAE">VAE</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lutein">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                
+                <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src=theme.cdn.mathjax + "/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Lutein 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://lutein.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/cat.jpg">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

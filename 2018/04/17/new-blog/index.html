@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Never Settle">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/lutein/lutein.github.io/master/img/jewelry.png">
+    <link rel="alternate" type="application/atom+xml" title="Lutein" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        RNN(Recurrent Neural Networks)｜Stone and Jewelry
+        
+    </title>
+
+    <link rel="canonical" href="http://lutein.github.io/2018/04/17/new-blog/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('undefined')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Lutein
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Archive/">Archive</a>
+                        </li>
+							
+						
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/2018/04/17/new-blog/1524537463632.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/2018/04/17/new-blog/1524537463632.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>RNN(Recurrent Neural Networks)</h1>
+                    
+                    <h2 class="subheading">Simple Introduction to RNN</h2>
+                    
+                    <span class="meta">
+                         作者 Lutein
+                        <span>
+                          日期 2018-04-17
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Deep Learning"
+                           title="Deep Learning">Deep Learning</a>
+                        
+                        <a class="tag" href="/tags/#Theory"
+                           title="Theory">Theory</a>
+                        
+                        <a class="tag" href="/tags/#RNN"
+                           title="RNN">RNN</a>
+                        
+                        <a class="tag" href="/tags/#Supervised Learning"
+                           title="Supervised Learning">Supervised Learning</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            RNN(Recurrent Neural Networks)
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p><img src="https://raw.githubusercontent.com/lutein/lutein.github.io/master/2018/04/17/new-blog/1508313303209.png" alt="structure of RNN" title="structure of RNN"></p>
+<p>RNN包含循环，允许信息持久化</p>
+<h2 id="前向传播"><a href="#前向传播" class="headerlink" title="前向传播"></a>前向传播</h2><p>$h^{(t)}$为隐藏状态，$L^{(t)}$为损失函数，$o^{(t)}$是模型输出，$\hat{y}^{(t)}$是真实输出。</p>
+<p>t时刻的隐藏状态$h^{(t)}=\sigma(Ux^{(t)}+Wh^{(t-1)}+b)$, $\sigma$为激活函数，一般为<code>tanh</code>，也就是说当前的隐藏状态由输入和上一时刻的隐藏态决定。</p>
+<script type="math/tex; mode=display">o^{(t)}=Vh^{(t)}+c</script><script type="math/tex; mode=display">y^{(t)}=\sigma(o^{(t)})</script><p>由于RNN是识别类的分类模型，激活函数为<code>softmax</code>。</p>
+<h2 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h2><p>BPTT(back propagation through time)</p>
+<p>模型参数$U, W, V, b ,c$在序列的各个位置共享，反向传播更新相同的参数</p>
+<blockquote>
+<p>？什么是更新相同的参数……</p>
+<p>就是说将每一时刻的梯度计算出来相加得到最终的梯度。</p>
+</blockquote>
+<p>损失函数定义为对数损失函数，最终的损失函数$L=\sum_{t=1}^\tau L^{(t)}$</p>
+<blockquote>
+<p>对数损失函数logstic loss function, log-likelihood loss function在logstic regression中使用</p>
+<p>MLE(Maximum Likelihood Estimation)</p>
+<p>$cost(\hat{y},y)=-y_i\log (\hat{y}))-(1-y_i)\log(1-\hat{y})$</p>
+<p>针对二分类问题的表示，当y=1时，如果预测结果也为1则损失为0，如果预测为0则损失非常大，同理，y=0时一样</p>
+<p>针对多分类问题，有NLLLoss(negative log likelihood loss), <code>torch.nn.NLLLoss</code></p>
+<p>$l=-\frac{\sum_{i=0}^{N-1} t_i\log y_i}{N}$</p>
+<p>$t_i$是gt的one hot，y是网络输出</p>
+<p>输入每一类概率的对数(<code>logsoftmax</code>)</p>
+<p><code>fc + cross entropy loss = fc + logsoftmax + NLLLoss</code></p>
+</blockquote>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial c} = \sum\limits_{t=1}^{\tau}\frac{\partial L^{(t)}}{\partial c} \\= \sum\limits_{t=1}^{\tau}\frac{\partial L^{(t)}}{\partial o^{(t)}} \frac{\partial o^{(t)}}{\partial c} \\= \sum\limits_{t=1}^{\tau}\hat{y}^{(t)} - y^{(t)}</script><p>中间推导过程：</p>
+<script type="math/tex; mode=display">\frac{\partial o^{(t)}}{\partial c}=1</script><script type="math/tex; mode=display">\frac{\partial L^{(t)}}{\partial o^{(t)}}=\frac{\partial L^{(t)}}{\partial \hat{y}^{(t)}}\frac{\partial \hat{y}^{(t)}}{\partial o^{(t)}}\\=\hat{y}^{(t)}-y^{(t)}</script><p>-log softmax求导：</p>
+<script type="math/tex; mode=display">\frac{\partial y}{\partial x_i}=-1 \text{if i is the right class, else }softmax(x_i)</script><blockquote>
+<p>cross entropy链式求导<br><a href="https://blog.csdn.net/qian99/article/details/78046329" target="_blank" rel="noopener">https://blog.csdn.net/qian99/article/details/78046329</a></p>
+<p>softmax求导：分为$i=j,i\neq j$两种情况</p>
+<script type="math/tex; mode=display">\frac{\partial a_j}{\partial z_j}=\frac{\partial}{\partial z_j}(\frac{e^{z_j}}{\sum_ke^{z_k}})\\=-\frac{e^{z_j}\sum_ke^{z_k}-e^{2z_j}}{(\sum_ke^{z_k})^2}\\=\frac{e^{z_j}}{\sum_ke^{z_k}}(1-\frac{e^{z_j}}{\sum_ke^{z_k}})\\=a_j(1-a_j)</script><script type="math/tex; mode=display">\frac{\partial a_j}{\partial z_i}=\frac{\partial}{\partial z_i}(\frac{e^{z_j}}{\sum_ke^{z_k}})\\=-\frac{e^{z_j}}{(\sum_ke^{z_k})^2}e^{z_i}\\=-a_ia_j</script><p>cross entropy导数推导</p>
+<p>定义$C=-\sum_iy_i\ln a_i, a_i=\frac{e^{z_i}}{\sum_ke^{z_k}}$</p>
+<p>$\frac{\partial C}{\partial a_j}=\frac{\partial(-\sum_jy_j\ln a_j)}{\partial a_j}=-\sum_jy_j\frac{1}{a_j}$</p>
+<p>最终合成的结果：</p>
+<script type="math/tex; mode=display">\frac{\partial C}{\partial z_i}=\frac{\partial C}{\partial a_j}\frac{\partial a_j}{\partial z_i}\\=-\sum_jy_j\frac{1}{a_j}\frac{\partial a_j}{\partial z_i}\\=-\frac{y_i}{a_i}a_i(1-a_i)+\sum_{j\neq i}\frac{y_j}{a_j}a_ia_j\\=-y_i+a_i\sum_ky_k</script><p>对于分类问题而言，y是one-hot,和为1，则最终结果为$-y_i+a_i$</p>
+</blockquote>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial V} =\sum\limits_{t=1}^{\tau}\frac{\partial L^{(t)}}{\partial V} = \sum\limits_{t=1}^{\tau}\frac{\partial L^{(t)}}{\partial o^{(t)}} \frac{\partial o^{(t)}}{\partial V} = \sum\limits_{t=1}^{\tau}(\hat{y}^{(t)} - y^{(t)}) (h^{(t)})^T</script><p>$V$与$c$相比只是多了一项$h^{(t)}$</p>
+<p>其余三个参数$W, V, b$的计算涉及到时序，比较复杂，定义序列索引$t$位置隐藏态梯度为$\delta^{(t)}=\frac{\partial L}{\partial h^{(t)}}$，然后从$\delta^{(t+1)}$递推$\delta^{(t)}$：</p>
+<script type="math/tex; mode=display">\delta^{(t)} =\frac{\partial L}{\partial o^{(t)}} \frac{\partial o^{(t)}}{\partial h^{(t)}} + \frac{\partial L}{\partial h^{(t+1)}}\frac{\partial h^{(t+1)}}{\partial h^{(t)}} \\= V^T(\hat{y}^{(t)} - y^{(t)}) + W^T\delta^{(t+1)}diag(1-(h^{(t+1)})^2)</script><p>对于$\delta^{(\tau)}$，已经是最后一个索引序列：</p>
+<script type="math/tex; mode=display">\delta^{(\tau)} =\frac{\partial L}{\partial o^{(\tau)}} \frac{\partial o^{(\tau)}}{\partial h^{(\tau)}} = V^T(\hat{y}^{(\tau)} - y^{(\tau)})</script><blockquote>
+<p>tanh的导数:$f’(x)=1-f^2$</p>
+<p>sigmoid的导数:<br>$f(x)=\frac{1}{1+e^{-z}},f’(x)=f(1-f)$</p>
+</blockquote>
+<p>根据递推式计算出$\delta^{(t)}$后可以计算相对于$W, U, b$的导数：</p>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial W} =  \sum\limits_{t=1}^{\tau}\frac{\partial L}{\partial h^{(t)}} \frac{\partial h^{(t)}}{\partial W} \\= \sum\limits_{t=1}^{\tau}diag(1-(h^{(t)})^2)\delta^{(t)}(h^{(t-1)})^T</script><script type="math/tex; mode=display">\frac{\partial L}{\partial b}= \sum\limits_{t=1}^{\tau}\frac{\partial L}{\partial h^{(t)}} \frac{\partial h^{(t)}}{\partial b} \\= \sum\limits_{t=1}^{\tau}diag(1-(h^{(t)})^2)\delta^{(t)}</script><script type="math/tex; mode=display">\frac{\partial L}{\partial U} = \sum\limits_{t=1}^{\tau}\frac{\partial L}{\partial h^{(t)}} \frac{\partial h^{(t)}}{\partial U} \\= \sum\limits_{t=1}^{\tau}diag(1-(h^{(t)})^2)\delta^{(t)}(x^{(t)})^T</script>
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/04/20/numpy-tips/" data-toggle="tooltip" data-placement="top"
+                           title="Tips for Numpy">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/03/03/RL-install-md/" data-toggle="tooltip" data-placement="top"
+                           title="Install Reinforcement Learning Environment">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTk0NC8xMjQ4MA">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#结构"><span class="toc-text">结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前向传播"><span class="toc-text">前向传播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反向传播"><span class="toc-text">反向传播</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Deep Learning"
+                           title="Deep Learning">Deep Learning</a>
+                        
+                        <a class="tag" href="/tags/#Theory"
+                           title="Theory">Theory</a>
+                        
+                        <a class="tag" href="/tags/#RNN"
+                           title="RNN">RNN</a>
+                        
+                        <a class="tag" href="/tags/#Supervised Learning"
+                           title="Supervised Learning">Supervised Learning</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lutein">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                
+                <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src=theme.cdn.mathjax + "/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Lutein 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://lutein.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/cat.jpg">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

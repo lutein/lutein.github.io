@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Never Settle">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/lutein/lutein.github.io/master/img/jewelry.png">
+    <link rel="alternate" type="application/atom+xml" title="Lutein" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        一个记录｜Stone and Jewelry
+        
+    </title>
+
+    <link rel="canonical" href="http://lutein.github.io/2018/05/01/intern-interview/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('undefined')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Lutein
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Archive/">Archive</a>
+                        </li>
+							
+						
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/2018/05/01/intern-interview/inter.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/2018/05/01/intern-interview/inter.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>一个记录</h1>
+                    
+                    <h2 class="subheading">Intern Interview</h2>
+                    
+                    <span class="meta">
+                         作者 Lutein
+                        <span>
+                          日期 2018-05-01
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Python"
+                           title="Python">Python</a>
+                        
+                        <a class="tag" href="/tags/#Coding"
+                           title="Coding">Coding</a>
+                        
+                        <a class="tag" href="/tags/#Record"
+                           title="Record">Record</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            一个记录
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p><div id="flowchart-0" class="flow-chart"></div><br>一面全过，二面后开始刷人，如果前两面都是negative，就没有三面。三面后当场可以从HR那里得到大致结果。</p>
+<p>一面会根据简历问一些相关问题，都不难，比如机器学习相关的问了聚类和k-means。然后手写代码。二面跟一面差不多，简要介绍以后直接写代码。三面是主管面，内容取决于面试官的性格，可能不写。</p>
+<h2 id="代码部分"><a href="#代码部分" class="headerlink" title="代码部分"></a>代码部分</h2><ol>
+<li><p>二分搜索返回下标</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">BinarySearch</span><span class="params">(nums, left, right)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> left &gt;= right:</span><br><span class="line">		<span class="keyword">return</span> right</span><br><span class="line"></span><br><span class="line">	mid = (left +right) //<span class="number">2</span></span><br><span class="line">	<span class="comment">#print mid</span></span><br><span class="line">	<span class="keyword">if</span> nums[mid] &lt; num:</span><br><span class="line">		<span class="keyword">return</span> BinarySearch(nums,mid+<span class="number">1</span>, right)</span><br><span class="line">	<span class="keyword">elif</span> nums[mid] &gt; num:</span><br><span class="line">		<span class="keyword">return</span> BinarySearch(nums, left, mid)</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> mid</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>给出二叉树的前序和中序，重建二叉树</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">construct_tree</span><span class="params">(preorder=None, inorder=None)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> preorder <span class="keyword">or</span> <span class="keyword">not</span> inorder:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">    idx = inorder.index(preorder[<span class="number">0</span>])</span><br><span class="line">    left = inorder[:idx]</span><br><span class="line">    right = inorder[idx+<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">    root = TreeNode(preorder[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">    root.left = construct_tree(preorder[<span class="number">1</span>:<span class="number">1</span>+len(left)], left)</span><br><span class="line">    root.right = construct_tree(preorder[-len(right)], right)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>快速排序</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">quicksort</span><span class="params">(nums)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> len(nums) &lt; <span class="number">2</span>:</span><br><span class="line">		<span class="keyword">return</span> nums</span><br><span class="line">	pivot = nums[<span class="number">0</span>]</span><br><span class="line">	less = [i <span class="keyword">for</span> i <span class="keyword">in</span> nums[<span class="number">1</span>:] <span class="keyword">if</span> i &lt;= pivot]</span><br><span class="line">	greater = [i <span class="keyword">for</span> i <span class="keyword">in</span> nums[<span class="number">1</span>:] <span class="keyword">if</span> i &gt; pivot]</span><br><span class="line">	<span class="keyword">return</span> quicksort(less) + [pivot] + quicksort(greater)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>选择排序</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">selectionsort</span><span class="params">(nums)</span>:</span></span><br><span class="line">	<span class="keyword">for</span> fill <span class="keyword">in</span> range(len(nums)<span class="number">-1</span>, <span class="number">0</span>, <span class="number">-1</span>):</span><br><span class="line">		maxloc = <span class="number">0</span></span><br><span class="line">		<span class="keyword">for</span> loc <span class="keyword">in</span> range(<span class="number">1</span>, fill+<span class="number">1</span>):</span><br><span class="line">			<span class="keyword">if</span> nums[loc] &gt; nums[maxloc]:</span><br><span class="line">				maxloc = loc</span><br><span class="line">		nums[fill], nums[maxloc] = nums[maxloc], nums[fill]</span><br><span class="line">	<span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>希尔排序</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">step = len(nums) // <span class="number">2</span></span><br><span class="line"><span class="keyword">while</span> step &gt; <span class="number">0</span>:</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(step, len(nums)):</span><br><span class="line">		<span class="keyword">while</span> i &gt;= step <span class="keyword">and</span> nums[i] &lt; nums[i - step]:</span><br><span class="line">			nums[i], nums[i-step] = nums[i-step], nums[i]</span><br><span class="line">			i -= step</span><br><span class="line">	step /= <span class="number">2</span></span><br><span class="line"><span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>堆排序</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">adjust_heap</span><span class="params">(nums, i)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> <span class="number">2</span>*i + <span class="number">1</span> &lt; len(nums):</span><br><span class="line">		children = nums[<span class="number">2</span>*i+<span class="number">1</span>:<span class="number">2</span>*i+<span class="number">3</span>]</span><br><span class="line">		n = np.argmax(children)</span><br><span class="line">		<span class="keyword">if</span> max(children) &gt; nums[i]:</span><br><span class="line">			<span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">				nums[<span class="number">2</span>*i+<span class="number">1</span>], nums[i] = nums[i], nums[<span class="number">2</span>*i+<span class="number">1</span>]</span><br><span class="line">				adjust_heap(nums, <span class="number">2</span>*i+<span class="number">1</span>)</span><br><span class="line">			<span class="keyword">else</span>:</span><br><span class="line">				nums[<span class="number">2</span>*i+<span class="number">2</span>], nums[i] = nums[i], nums[<span class="number">2</span>*i+<span class="number">2</span>]</span><br><span class="line">				adjust_heap(nums, <span class="number">2</span>*i+<span class="number">2</span>)</span><br><span class="line">				</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_heap</span><span class="params">(nums)</span>:</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range((len(nums)<span class="number">-1</span>)//<span class="number">2</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">		adjust_heap(nums,i)</span><br><span class="line">		</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">heapsort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    i = len(nums) - <span class="number">1</span></span><br><span class="line">    n = np.argmax(nums)</span><br><span class="line">    nums[<span class="number">0</span>], nums[n] = nums[n], nums[<span class="number">0</span>]    </span><br><span class="line">    build_heap(nums)</span><br><span class="line">    <span class="keyword">while</span> i &gt;= <span class="number">0</span>:</span><br><span class="line">        n = nums.pop(<span class="number">0</span>)</span><br><span class="line">        nums.append(n)</span><br><span class="line">        num = nums[:i]</span><br><span class="line">        adjust_heap(num, <span class="number">0</span>)</span><br><span class="line">        nums[:i] = num</span><br><span class="line">        i -= <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>$n$根绳子，长度为$l_1-l_n$，剪成$k$段，每段长度相同，怎样使每段的长度最大<br>这道题与剑指offer中剪绳子的那道颇为相似，但是可以用递归来破解，以下是我的一种解法。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#recursive version</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Divide</span><span class="params">(nums, k, length)</span>:</span></span><br><span class="line">	count = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> nums:</span><br><span class="line">		<span class="keyword">if</span> i == length:</span><br><span class="line">			count += <span class="number">1</span></span><br><span class="line">		<span class="keyword">elif</span> i &gt; length:</span><br><span class="line">			count += i // length</span><br><span class="line">		<span class="keyword">if</span> count &gt;= k:</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Find</span><span class="params">(nums, k, length)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> k == <span class="number">1</span>:</span><br><span class="line">		<span class="keyword">return</span> k, nums[<span class="number">-1</span>]</span><br><span class="line">	<span class="keyword">if</span> length &lt; <span class="number">1</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">	<span class="keyword">if</span> Divide(nums, k, length):</span><br><span class="line">		<span class="keyword">return</span> k, length</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">return</span> Find(nums, k, length - <span class="number">1</span>)</span><br><span class="line"><span class="comment">#test</span></span><br><span class="line">nums = [<span class="number">4</span>,<span class="number">3</span>, <span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">nums = sorted(nums)</span><br><span class="line">k = <span class="number">3</span></span><br><span class="line">sum = sum(nums)</span><br><span class="line">length = sum // k</span><br><span class="line"><span class="keyword">print</span> Find(nums, k, length)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>字符串s：<code>abbacdbab</code>, 字符串p：<code>abb</code>。找s中的字串满足该子串中字母及每个字母对应的个数与p相同，求这样子串的个数<br><a href="https://leetcode.com/problems/find-all-anagrams-in-a-string/description/" target="_blank" rel="noopener">LeetCode 438</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findAnagrams</span><span class="params">(self, s, p)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :type p: str</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        res = []</span><br><span class="line">        n, m = len(s), len(p)</span><br><span class="line">        <span class="keyword">if</span> n &lt; m: <span class="keyword">return</span> res</span><br><span class="line">        phash, shash = [<span class="number">0</span>]*<span class="number">123</span>, [<span class="number">0</span>]*<span class="number">123</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> p:</span><br><span class="line">            phash[ord(x)] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> s[:m<span class="number">-1</span>]:</span><br><span class="line">            shash[ord(x)] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m<span class="number">-1</span>, n):</span><br><span class="line">            shash[ord(s[i])] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> i-m &gt;= <span class="number">0</span>:</span><br><span class="line">                shash[ord(s[i-m])] -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> shash == phash:</span><br><span class="line">                res.append(i - m + <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>链表遍历</p>
+</li>
+<li><p>冒泡排序</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bubblesort</span><span class="params">(nums)</span>:</span></span><br><span class="line">	<span class="keyword">for</span> times <span class="keyword">in</span> range(len(nums)<span class="number">-1</span>, <span class="number">0</span>, <span class="number">-1</span>):</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(times):</span><br><span class="line">			<span class="keyword">if</span> nums[i]&gt;nums[i+<span class="number">1</span>]:</span><br><span class="line">				nums[i], nums[i+<span class="number">1</span>] = nums[i+<span class="number">1</span>], nums[i]</span><br><span class="line">	<span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>求给定字符串中包含该字符串所有出现过的字母的最短字串</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ShortestSubstring</span><span class="params">(str)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> str:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">    record = []</span><br><span class="line">    count = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> str:</span><br><span class="line">        <span class="keyword">if</span> s <span class="keyword">in</span> record:</span><br><span class="line">            count[s] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            record.append(s)</span><br><span class="line">            count[s] = <span class="number">1</span></span><br><span class="line">    left, right = <span class="number">0</span>, len(str) - <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">        <span class="keyword">if</span> count[str[left]] == <span class="number">1</span> <span class="keyword">and</span> count[str[right]] == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> str[left:right+<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">if</span> count[str[left]] &gt; <span class="number">1</span>:</span><br><span class="line">            count[str[left]] -= <span class="number">1</span></span><br><span class="line">            left += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> count[str[left]] == <span class="number">1</span> <span class="keyword">and</span> count[str[right]] &gt; <span class="number">1</span>:</span><br><span class="line">            count[str[right]] -= <span class="number">1</span></span><br><span class="line">            right -= <span class="number">1</span> </span><br><span class="line"><span class="keyword">print</span> ShortestSubstring(<span class="string">"abaacdab"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>非递归版快排</p>
+</li>
+<li>插入排序<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertsort</span><span class="params">(nums)</span>:</span></span><br><span class="line">	<span class="keyword">for</span> loc <span class="keyword">in</span> range(<span class="number">1</span>, len(nums)):</span><br><span class="line">		currentval = nums[loc]</span><br><span class="line">		position = loc</span><br><span class="line">		<span class="keyword">while</span> position &gt; <span class="number">0</span> <span class="keyword">and</span> nums[position<span class="number">-1</span>] &gt; currentval:</span><br><span class="line">			nums[position] = nums[position<span class="number">-1</span>]</span><br><span class="line">			position -= <span class="number">1</span></span><br><span class="line">		nums[position] = currentval</span><br><span class="line">	<span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="非代码部分"><a href="#非代码部分" class="headerlink" title="非代码部分"></a>非代码部分</h2><ol>
+<li><p>判断链表是否有环，如何找出入环点。<br>使用快慢指针，初始化为链表头，慢指针每次向后移动1，快指针移动2，遍历链表，如果快慢指针指到同一个位置，说明有环；如果快指针指向了<code>null</code>，说明无环。<br><img src="/2018/05/01/intern-interview/./1525156060090.png" alt="Alt text"><br>假设在第$t$步快慢指针到达同一个位置，那么此时快指针走了$2t$，而慢指针走了$t$。<br>设环的长度为$R$，入环点距离链表头距离为$len$，指针距离入环点为$x$，快指针共绕环$n(n\in[1,2,\ldots])$次，那么可以得到等式：</p>
+<script type="math/tex; mode=display">t=len+x</script><script type="math/tex; mode=display">2t=len+nR+x</script><p>可以证明，$n=1$，那么$len=R-x$。<br><img src="/2018/05/01/intern-interview/./1525156352460.png" alt="Alt text"><br>定义一个currnet指针，初始化为链表头，一个inter指针，指向快慢指针的交汇点，两个指针一起向后移动，交汇时即为入环点。</p>
+</li>
+<li><p>给出一个$n\times n$数值矩阵，从左到右、从上到下依次递增，如何从中快速找到目标值并分析时间复杂度。<br>从左下角或右上角开始比较，每次可以去掉一行/一列，时间复杂度是O(n)。</p>
+</li>
+<li><p>概率题：10个红球，10个绿球，放入A,B两个箱子中，如何放置才能使随机取一个箱子中的一个球是红球的概率最大。<br>考虑边界情况的概率最大：A中放10个绿球，9个红球，B中放1个红球，取得红球的概率为</p>
+<script type="math/tex; mode=display">P(r)=0.5(1+\frac{9}{19})=0.74</script><p>如何确定是9个红球：<br>设A中放$x$个红球则A中取得红球的概率为$f(x)=\frac{x}{10+x},x\in[1,2,\ldots,9]$，在定义域上是递增的，因此取9个红球。</p>
+</li>
+</ol>
+<p><strong>欢迎在评论区交流补充😀</strong></p>
+<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">op1=>operation: 一面：简历+手写代码
+op2=>operation: 二面：手写代码
+op3=>operation: 三面：主管面
+op1->op2->op3</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/05/02/VAE-part2/" data-toggle="tooltip" data-placement="top"
+                           title="Introduction to VAE(Variational Auto-Encoder) Part2">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/04/30/VAE-version1/" data-toggle="tooltip" data-placement="top"
+                           title="Introduction to VAE(Variational Auto-Encoder) Part1">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTk0NC8xMjQ4MA">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#流程"><span class="toc-text">流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码部分"><span class="toc-text">代码部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非代码部分"><span class="toc-text">非代码部分</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Python"
+                           title="Python">Python</a>
+                        
+                        <a class="tag" href="/tags/#Coding"
+                           title="Coding">Coding</a>
+                        
+                        <a class="tag" href="/tags/#Record"
+                           title="Record">Record</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lutein">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Lutein 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://lutein.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/cat.jpg">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

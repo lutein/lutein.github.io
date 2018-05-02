@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Never Settle">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/lutein/lutein.github.io/master/img/jewelry.png">
+    <link rel="alternate" type="application/atom+xml" title="Lutein" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Introduction to VAE(Variational Auto-Encoder) Part2｜Stone and Jewelry
+        
+    </title>
+
+    <link rel="canonical" href="http://lutein.github.io/2018/05/02/VAE-part2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('undefined')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Lutein
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Archive/">Archive</a>
+                        </li>
+							
+						
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/2018/05/02/VAE-part2/VAE.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/2018/05/02/VAE-part2/VAE.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Introduction to VAE(Variational Auto-Encoder) Part2</h1>
+                    
+                    <h2 class="subheading">变分自编码器简介（二）</h2>
+                    
+                    <span class="meta">
+                         作者 Lutein
+                        <span>
+                          日期 2018-05-02
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Deep Learning"
+                           title="Deep Learning">Deep Learning</a>
+                        
+                        <a class="tag" href="/tags/#Unsupervised Learning"
+                           title="Unsupervised Learning">Unsupervised Learning</a>
+                        
+                        <a class="tag" href="/tags/#Theory"
+                           title="Theory">Theory</a>
+                        
+                        <a class="tag" href="/tags/#VAE"
+                           title="VAE">VAE</a>
+                        
+                        <a class="tag" href="/tags/#MLE"
+                           title="MLE">MLE</a>
+                        
+                        <a class="tag" href="/tags/#EM"
+                           title="EM">EM</a>
+                        
+                        <a class="tag" href="/tags/#CAE"
+                           title="CAE">CAE</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Introduction to VAE(Variational Auto-Encoder) Part2
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="VAE的简要介绍"><a href="#VAE的简要介绍" class="headerlink" title="VAE的简要介绍"></a>VAE的简要介绍</h1><p><a href="https://lutein.github.io/2018/04/30/VAE-version1/">Part1</a>从算法角度入手，以mnist数据集为例介绍VAE的输入输出，损失函数和基本理论，以及VAE的常见应用，附带Pytorch实现的VAE代码；<a href="https://lutein.github.io/2018/05/02/VAE-part2/">Part2</a>着重于概率论的理论分析，涉及到流形学习，稍微提到了与VAE相似的CAE。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>VAE对隐层输出增加长约束，在隐层采样过程中起到类似与dropout层的正则化作用，不容易过拟合。</p>
+<p>由于VAE跟CAE的原理相似，以下补充CAE的简要介绍，可以跳过，不影响阅读。</p>
+<blockquote>
+<p><strong>CAE(constructive auto-encoder)</strong><br>在auto-encoder上加入正则项，对权值进行惩罚：</p>
+<script type="math/tex; mode=display">\mathcal{L}_{CAE}=\sum_{x\in D_n}(L(x,g(f(x)))+\lambda ||J_f(x)||^2_F)</script><p>其中的正则项$J<em>f{x}$是隐层输出关于权值的雅可比矩阵，$||J</em>{f}(x)||^2_{F}$是雅可比矩阵F范数的平方，即对雅可比矩阵中的每个元素求平方：</p>
+<script type="math/tex; mode=display">||J_{f}(x)||^2_{F}=\sum_{ij}(\frac{\partial h_j(x)}{\partial x_i})^2\\=\sum_{i=1}^{d_h}(h_i(1-h_i))^2\sum_{j=1}^{d_x}W_{ij}^2</script><p>CAE为什么在分类问题上表现好：<br>好的特征表示大致有2个衡量标准：1. 可以很好的重构出输入数据; 2.对输入数据一定程度下的扰动具有不变性。普通的autoencoder和sparse autoencoder主要是符合第一个标准，而deniose autoencoder和contractive autoencoder则主要体现在第二个。而对于分类任务来说，第二个标准更重要。雅克比矩阵包含数据在各种方向上的信息，Contractive autoencoder主要是抑制训练样本（处在低维流形曲面上）在所有方向上的扰动。<br>直接对auto-encoder的权值进行惩罚：</p>
+<script type="math/tex; mode=display">\mathcal{L}_{AE+wd(\theta)}=\lgroup\sum_{x\in D_n}L(x,g(f(x)))\rgroup+\lambda\sum_{ij}W_{ij}^2</script></blockquote>
+<p>对于高维数据而言，相似数据可能分布在高维空间的某个<strong>流形</strong>上，特征学习就是要显式或隐式地学习到这种流形。</p>
+<p>以下补充流形学习的简要介绍，可以跳过，不影响阅读。</p>
+<blockquote>
+<p><strong>流形学习(Manifold Learning)</strong><br>主要应用到数据降维与特征提取<br>思想：将高维数据映射到低维，使该低维数据能够反映高维数据的某些本质结构特征，即降维后仍能保持数据在高维中具有的某种结构特征。<br>流行学习的前提是一种假设：某些高维数据实际上是一种低维流形结构嵌入在高维空间中，而流行学习的目的是将其映射回低维空间中，揭示本质。通俗的讲，高维数据是由低维流形映射到高维空间上的，受限于数据内部特征，高维中数据会产生维度冗余，比如用二维直角坐标来描述一个圆是有冗余的，而使用极坐标来描述可以让这个描述方法所确定的所有点的集合都能在圆上，且只需要一个参数——半径。因此二维空间中的圆就是一个一维流形，与之类似的，三维空间中球面只需要用两个坐标(经纬度)来表示。<br>使用流行学习进行数据降维实际上是一种非线性降维，考虑距离和生成数据的拓扑结构。<br>由于流行学习可以刻画数据本质，因此深度学习中希望模型能够学习到数据在流行空间中的表示。什么样才是模型学习到了流行？模拟低维流形生成高维数据的生成过程，再通过对低维流行的微调，能够得到对应结构的高维数据(GAN)。GAN的生成过程即为输入一个特征空间的低维编码，得到一个输出空间的高维图像，由于流形空间是连续的，那么映射到高维空间的数据在流形连续调整时变得连续且有意义。<br><img src="/2018/05/02/VAE-part2/./1525095535126.png" alt="@将三维流形映射到二维"><br>常见方法：局部改线嵌入(Local Linear Embedding, LLE)，拉普拉斯特征映射(Laplacian Eigenmaps, LE)，局部保持投影LPP，等距映射Isomap。</p>
+</blockquote>
+<p><strong>编码空间就是流形空间</strong><br><img src="/2018/05/02/VAE-part2/./1525234049011.png" alt="Alt text"><br>从低维隐变量恢复高维观测变量。</p>
+<h2 id="问题陈述"><a href="#问题陈述" class="headerlink" title="问题陈述"></a>问题陈述</h2><p>观测变量$x$与隐变量$z$(latent variables)的关系如图：<br><img src="/2018/05/02/VAE-part2/./1525241809412.png" alt="@观测变量与隐变量的关系"></p>
+<p>$x,z$都为向量，且观测变量的分布固定但未知。对于隐变量的先验概率$p(z)$，$x$相对于$z$的条件概率$p(x|z)$和隐变量的后验概率$p(z,x)$有如下关系：</p>
+<script type="math/tex; mode=display">p(z,x)=p(x|z)p(z)</script><p>$x$的边缘分布可以计算：</p>
+<script type="math/tex; mode=display">p(x)=\int_zp(x,z)dz=\int_zp(x|z)\cdot p(z)dz=E_z[p(x|z)]</script><p>而隐变量是不能被观测的，因此需要通过一个观察集$X$来估计概率图的相关参数。<br>如果一个机器学习模型可以显式或隐式地建模$p(z),p(x|z)$，这个模型就是生成模型，生成模型的含义是：</p>
+<ol>
+<li>$p(z),p(x|z)$决定了联合分布$p(z,x)$</li>
+<li>利用$p(z),p(x|z)$可以对$x$进行祖先采样：先按照概率生成采样点$z_i\sim p(z)$，再按照概率采样$x_i\sim p(x|z_i)$。</li>
+</ol>
+<p><strong>最简单的生成模型是朴素贝叶斯</strong></p>
+<p>以下补充对采样的简要介绍，可以跳过，不影响阅读。</p>
+<blockquote>
+<p><strong>sampling</strong><br><strong>what is sampling</strong><br>已知一个随机变量$z$的分布$p(z)$，预个关于该变量的函数$f(z)$的值：$E_f=\int f(z)p(z)dz$<br>根据$p(z)$独立产生一系列采样点$z^{(l)}$，可以得到：</p>
+<script type="math/tex; mode=display">\hat{f}=\frac{1}{L}\sum_{l=1}^Lf(z^{(l)})\rightarrow E_{\hat{f}}=E_f</script><p><strong>sampling methods</strong><br>祖先采样法(ancestral sampling)<br><a href="https://blog.csdn.net/hubin232/article/details/70171507" target="_blank" rel="noopener">https://blog.csdn.net/hubin232/article/details/70171507</a><br>基本采样法(basic sampling)<br>拒绝采样法(reject sampling)<br>自适应拒绝采样法(adaptive reject sampling)<br>重要性采样法(importance sampling)</p>
+</blockquote>
+<h2 id="最大似然估计-Maximum-Likelihood-Estimation-MLE"><a href="#最大似然估计-Maximum-Likelihood-Estimation-MLE" class="headerlink" title="最大似然估计(Maximum Likelihood Estimation, MLE)"></a>最大似然估计(Maximum Likelihood Estimation, MLE)</h2><p>最大似然估计，就是利用已知样本结果，反推最有可能导致这样结果的参数值。最大似然中采样假设都是独立同分布。<br><a href="https://zhuanlan.zhihu.com/p/26614750" target="_blank" rel="noopener">一个直观解释</a></p>
+<p>给定一组观测值$X=(x_i), i=1,\dots,n$，其似然为：</p>
+<script type="math/tex; mode=display">L(p_\theta(X))=\prod_i^np_\theta(x_i)</script><p>取对数：</p>
+<script type="math/tex; mode=display">\log L(p_\theta(X))=\sum_i^n\log p_\theta(x_i)</script><p>MLE假设最大化似然的参数$\theta^*$为最优参数估计，将参数估计问题转化为最大化$\log L(p_\theta(X))$问题。按照贝叶斯推理的观点，$\theta$本身作为随机变量服从某个分布$p(\theta)$:</p>
+<script type="math/tex; mode=display">p(\theta|X)=\frac{p(\theta)\cdot (X|\theta)}{p(X)}=\frac{p(\theta)\cdot (X|\theta)}{\int_\theta p(X,\theta)d\theta}\propto p(\theta)\cdot (X|\theta)</script><p>$\propto$表示正比<br>最大后验概率估计(MAP):</p>
+<script type="math/tex; mode=display">\log p(\theta|X)=\log p(\theta)+\log L(p(X|\theta))</script><h2 id="期望最大化-Expectation-maximization-EM"><a href="#期望最大化-Expectation-maximization-EM" class="headerlink" title="期望最大化(Expectation-maximization, EM)"></a>期望最大化(Expectation-maximization, EM)</h2><p>通过MLE得到了优化目标，其中存在对隐变量的积分，可以用EM算法解决。</p>
+<blockquote>
+<p>EM解决了高斯混合模型(Gaussian Mixture Model, GMM)的参数估计和K-Means，语音识别中GMM-HMM模型的训练也用到了EM</p>
+</blockquote>
+<h2 id="MCMC"><a href="#MCMC" class="headerlink" title="MCMC"></a>MCMC</h2><p>EM中涉及到对$p(z|x)$的积分，由于概率分布的多样性和变量高维，积分难以计算(intractable)。因此可以采用数值积分近似求M-step中的积分项，需要用<a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo" target="_blank" rel="noopener">MCMC</a>按照$p(z|x)$对$z$进行采样</p>
+<h2 id="变分推理-Variation-Induction"><a href="#变分推理-Variation-Induction" class="headerlink" title="变分推理(Variation Induction)"></a>变分推理(Variation Induction)</h2><p>由于MCMC过于复杂，在数据量大的情况下难以应用，需要使用其他近似解决方案。变分推理寻找一个易于处理的分布$q(z)$使其与$p(z|x)$尽可能接近，然后使用$q(z)$来代替。衡量分布间的相似程度使用KL散度，将寻找$q(z)$转换为优化问题：</p>
+<script type="math/tex; mode=display">q^*(z)=argmax_{q(z)\in Q}KL(q(z)\|p(z|x))</script><p>$KL(q(z)|p(z|x))$是关于$q(z)$的函数，$q(z)\in Q$也是一个函数，因此这是一个泛函(函数的函数)求极值。</p>
+<blockquote>
+<p>变分求极值之于泛函，正如微分求极值之于函数</p>
+</blockquote>
+<p>这是变分自编码器中变分(variation)的由来。</p>
+<p>以下补充KL散度的简要介绍，可以跳过，建议阅读。</p>
+<blockquote>
+<p><strong><a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence" target="_blank" rel="noopener">KL散度</a> (relative entropy)</strong></p>
+<script type="math/tex; mode=display">KL(P||Q)=\int_{-\infty}^{+\infty}p(x)\log\frac{p(x)}{q(x)}dx\\=\int_{-\infty}^{+\infty}p(x)\log p(x)dx-\int_{-\infty}^{+\infty}p(x)\log q(x)dx\\=H(P,Q)-H(P)\\=\text{cross entropy-entropy}</script><p>$KL(P||Q)\neq KL(Q||P)$<br>$KL(P||Q)\geq 0, KL(P||Q)=0\text{ when }P=Q$</p>
+</blockquote>
+<h2 id="ELBO-Evidence-Lower-Bound-Objective"><a href="#ELBO-Evidence-Lower-Bound-Objective" class="headerlink" title="ELBO(Evidence Lower Bound Objective)"></a>ELBO(Evidence Lower Bound Objective)</h2><p>将最小化KL等价为最大化ELBO问题：</p>
+<script type="math/tex; mode=display">KL(q(z)\|p(z|x))=\log p(x)-ELBO(q)</script><blockquote>
+<script type="math/tex; mode=display">KL(q(z)\|p(z|x))=\int q\log \frac{q}{p}\\=E_q(\log q-
+\log p)\\=E_q[\log q(z)]-E_q[\log p(z|x)]\\=E_q[\log q(z)]-E_q[\log p(z,x)]+\log p(x)</script><p>令$ELBO(q)=E_q[\log p(z,x)]-E_q[\log q(z)]$:</p>
+<script type="math/tex; mode=display">\log p(x)=KL(q(z)\|p(z|x))+ELBO(q)\ge ELBO(q)</script><p>因此ELBO是$p(x)$对数似然(evidence)的下限(lower bound)。</p>
+</blockquote>
+<h2 id="VAE"><a href="#VAE" class="headerlink" title="VAE"></a>VAE</h2><p>将ELBO记为$L$，通过优化$L$来优化$KL$。观测数据$x^{(i)}$的对数似然写为：</p>
+<script type="math/tex; mode=display">\log p_{\theta}(x^{(i)})=KL(q_{\Phi}(z)\|p(z|x^{(i)}))+L(\theta, \Phi;x^{(i)})</script><h3 id="优化目标"><a href="#优化目标" class="headerlink" title="优化目标"></a>优化目标</h3><script type="math/tex; mode=display">L(\theta, \Phi;x^{(i)})=E_{q_\Phi(z|x)}[\log p_{\theta}(x^{(i)}|z)]-KL(q_{\Phi}(z|x^{(i)})\|p_\theta(z))</script><p>分解为优化$KL$和后验概率的对数似然：</p>
+<ol>
+<li>$KL$优化：<br>$q$是要学习的分布，$p$是隐变量的先验分布，如果$q$取各维独立的高斯分布(Decoder)，令$p$为标准正态分布，可以计算出$KL$：<script type="math/tex; mode=display">-KL(q_{\Phi}(z|x^{(i)})\|p_\theta(z))=-0.5*(1+\log\sigma_i^2-\mu_i^2-\sigma_i^2)\\=-0.5(1+\log\sigma^2-\mu^2-e^{\log\sigma^2})</script></li>
+<li>对数似然优化：这一项不能解析求出，考虑采样<script type="math/tex; mode=display">E_{q_\Phi(z|x)}[\log p_{\theta}(x^{(i)}|z)]\approx\frac{1}{L}\sum_{j=1}^L\log p_\theta(x^{(i)}|z^{(j)})</script>其中的$z^{(j)}$由reparameterization方法获得，如果每次只采一个样本点则有：<script type="math/tex; mode=display">E_{q_\Phi(z|x)}[\log p_{\theta}(x^{(i)}|z)]\approx\log p_\theta(x^{(i)}|\tilde{z})</script>即为常用损失函数。</li>
+</ol>
+<h3 id="概率分布及对应损失函数"><a href="#概率分布及对应损失函数" class="headerlink" title="概率分布及对应损失函数"></a>概率分布及对应损失函数</h3><p>下面对encoder的损失函数推导对应的概率分布。<br><strong>假设样本各维独立</strong>。</p>
+<ol>
+<li>交叉熵<br>假设$p(x_i|z)$服从伯努利分布：$p(x=1|z)=\alpha_z,p(x=0)=1-\alpha_z$<br>对于某个观测值的似然为<script type="math/tex; mode=display">L=\alpha_z^x\cdot(1-\alpha_z)^{1-x}</script>decoder的输出是伯努利分布的参数$\alpha_z=decoder(z)=\hat{x}$，得到对数似然：<script type="math/tex; mode=display">\log L=x\cdot\log(\hat{x})+(1-x)\log(1-\hat{x})</script>取负即为交叉熵损失。</li>
+<li>MSE<br>假设$p(x_i|z)$服从高斯分布：$p(x|z)=\frac{1}{\sqrt{2\pi}\sigma}\cdot e^{-\frac{(x-\mu)^2}{2\sigma^2}}$，对数似然为：<script type="math/tex; mode=display">\log L=-0.5*\log(2\pi)-0.5*\log\sigma-\frac{(x-\mu)^2}{2\sigma^2}</script>decoder是高斯分布的期望，方差$\sigma$为未知常数，优化目标为：<script type="math/tex; mode=display">\max(-\frac{(x-\mu)^2}{2\sigma^2})=\min(x-\mu)^2</script></li>
+</ol>
+<p><strong>指路<a href="https://lutein.github.io/2018/04/30/VAE-version1/">Part1</a></strong></p>
+<p><strong>Reference</strong><br><a href="https://blog.csdn.net/jackytintin/article/details/53641885" target="_blank" rel="noopener">VAE</a><br><a href="https://www.zhihu.com/question/24015486" target="_blank" rel="noopener">manifold learning</a><br><a href="https://www.cnblogs.com/tornadomeet/p/3434651.html" target="_blank" rel="noopener">CAE</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/05/01/intern-interview/" data-toggle="tooltip" data-placement="top"
+                           title="一个记录">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTk0NC8xMjQ4MA">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VAE的简要介绍"><span class="toc-text">VAE的简要介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题陈述"><span class="toc-text">问题陈述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最大似然估计-Maximum-Likelihood-Estimation-MLE"><span class="toc-text">最大似然估计(Maximum Likelihood Estimation, MLE)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#期望最大化-Expectation-maximization-EM"><span class="toc-text">期望最大化(Expectation-maximization, EM)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCMC"><span class="toc-text">MCMC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变分推理-Variation-Induction"><span class="toc-text">变分推理(Variation Induction)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ELBO-Evidence-Lower-Bound-Objective"><span class="toc-text">ELBO(Evidence Lower Bound Objective)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VAE"><span class="toc-text">VAE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#优化目标"><span class="toc-text">优化目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#概率分布及对应损失函数"><span class="toc-text">概率分布及对应损失函数</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Deep Learning"
+                           title="Deep Learning">Deep Learning</a>
+                        
+                        <a class="tag" href="/tags/#Unsupervised Learning"
+                           title="Unsupervised Learning">Unsupervised Learning</a>
+                        
+                        <a class="tag" href="/tags/#Theory"
+                           title="Theory">Theory</a>
+                        
+                        <a class="tag" href="/tags/#VAE"
+                           title="VAE">VAE</a>
+                        
+                        <a class="tag" href="/tags/#MLE"
+                           title="MLE">MLE</a>
+                        
+                        <a class="tag" href="/tags/#EM"
+                           title="EM">EM</a>
+                        
+                        <a class="tag" href="/tags/#CAE"
+                           title="CAE">CAE</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/luteiner">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/lutein">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                
+                <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src=theme.cdn.mathjax + "/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Lutein 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://lutein.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/cat.jpg">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>
