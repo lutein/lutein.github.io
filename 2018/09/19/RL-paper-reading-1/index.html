@@ -196,18 +196,18 @@
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
                 <h1 id="Nature-DQN"><a href="#Nature-DQN" class="headerlink" title="Nature DQN"></a>Nature DQN</h1><p><strong>DeepMind, 2015</strong><br><a href="http://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf" target="_blank" rel="noopener">Paper</a></p>
-<h3 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h3><ul>
+<h2 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h2><ul>
 <li>use CNN to estimate state value function</li>
 <li>adopt replay buffer to train agent</li>
 <li>use separate target network to compute TD error</li>
 </ul>
-<h3 id="formulas"><a href="#formulas" class="headerlink" title="formulas"></a>formulas</h3><ul>
+<h2 id="formulas"><a href="#formulas" class="headerlink" title="formulas"></a>formulas</h2><ul>
 <li>TD target: $r+\gamma\max_{a’} Q(s’,a’;\theta^-)$</li>
 <li>TD error: $\Delta=r+\gamma\max_{a’} Q(s’,a’;\theta^-)-Q(s,a;\theta)$</li>
 <li>update rule: $\theta_{t+1}=\theta_t+\alpha\Delta\nabla Q(s,a;\theta)$</li>
 <li>loss function: $loss=\Delta^2$</li>
 </ul>
-<h3 id="details"><a href="#details" class="headerlink" title="details"></a>details</h3><ol>
+<h2 id="details"><a href="#details" class="headerlink" title="details"></a>details</h2><ol>
 <li><p>RL is known to be unstable or even to diverge when a nonlinear function approximator such as a NN is used to represent the action-value function ($Q$ function). There are several causes:</p>
 <ul>
 <li>the correlations present in the sequence of observations</li>
@@ -223,12 +223,13 @@
 <li><p>loss function: <script type="math/tex">L_I(\theta_i)=\mathbb{E}_{(s,a,r,s')\sim U(D)}[(r+\gamma\max_{a'}Q(s',a';\theta_i^-)-Q(s,a;\theta_i))^2]</script>. $\theta_i$ is the parameter of Q-network, $\theta_i^-$ is the parameter of target Q-network, which is updated with $\theta_i$ every C steps and is held fixed between individual updates</p>
 </li>
 </ol>
-<h3 id="disadvantages"><a href="#disadvantages" class="headerlink" title="disadvantages"></a>disadvantages</h3><p>Overestimate action values under certain conditions (because of the max operation); use the same values both to select and to evaluate an action.</p>
-<h3 id="pseudocode"><a href="#pseudocode" class="headerlink" title="pseudocode"></a>pseudocode</h3><p><img src="/2018/09/19/RL-paper-reading-1/./DQN.png" alt="Alt text"></p>
-<h3 id="code"><a href="#code" class="headerlink" title="code"></a>code</h3><ul>
+<h2 id="disadvantages"><a href="#disadvantages" class="headerlink" title="disadvantages"></a>disadvantages</h2><p>Overestimate action values under certain conditions (because of the max operation); use the same values both to select and to evaluate an action.</p>
+<h2 id="pseudocode"><a href="#pseudocode" class="headerlink" title="pseudocode"></a>pseudocode</h2><p><img src="/2018/09/19/RL-paper-reading-1/./DQN.png" alt="Alt text"></p>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><ul>
 <li>Pytorch<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#create two networks and synchronize</span></span><br><span class="line">current_model, target_model = DQN(num_states, num_actions), DQN(num_states, num_actions)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_model</span><span class="params">(current_model, target_model)</span>:</span></span><br><span class="line">    target_model.load_state_dict(current_model.state_dict())</span><br><span class="line">update_model(current_model, target_model)</span><br><span class="line">optimizer = optim.Adam(current_model.parameters())</span><br><span class="line"><span class="comment">#sample s,a,r,s2,t from replay buffer</span></span><br><span class="line">s, a, r, s2, t = replay_buffer.sample(batchsize)</span><br><span class="line">q_values = current_model(s)</span><br><span class="line">next_q_values = target_model(s2)</span><br><span class="line"></span><br><span class="line"><span class="comment">#choose the action state value</span></span><br><span class="line">q_value = q_values.gather(<span class="number">1</span>, a.unsqueeze(<span class="number">1</span>)).squeeze(<span class="number">1</span>)</span><br><span class="line">next_q_value = next_q_values.max(<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">expected_q_value = r + gamma * next_q_value * (<span class="number">1</span> - t)</span><br><span class="line"></span><br><span class="line"><span class="comment">#compute loss</span></span><br><span class="line">loss = (q_value - Variable(expected_q_value.data)).pow(<span class="number">2</span>).mean()</span><br><span class="line"><span class="comment">#update params</span></span><br><span class="line">optimizer.zero_grad()</span><br><span class="line">loss.backward()</span><br><span class="line">optimizer.step()</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<p>Full version can be found <a href="https://github.com/lutein/reinforcement-algorithms/blob/master/DQN/nature_DQN.ipynb" target="_blank" rel="noopener">here</a> 😀.</p>
 <p>In the next post, several variants of DQN will be introduced.</p>
 
                 <hr>
@@ -274,7 +275,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nature-DQN"><span class="toc-text">Nature DQN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#summary"><span class="toc-text">summary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#formulas"><span class="toc-text">formulas</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#details"><span class="toc-text">details</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#disadvantages"><span class="toc-text">disadvantages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pseudocode"><span class="toc-text">pseudocode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#code"><span class="toc-text">code</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nature-DQN"><span class="toc-text">Nature DQN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#summary"><span class="toc-text">summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#formulas"><span class="toc-text">formulas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#details"><span class="toc-text">details</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#disadvantages"><span class="toc-text">disadvantages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pseudocode"><span class="toc-text">pseudocode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#code"><span class="toc-text">code</span></a></li></ol></li></ol>
                 </div>
             </div>
         </div>
